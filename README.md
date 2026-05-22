@@ -62,17 +62,19 @@ Prints all 10 analysis sections to the terminal with formatted tables.
 ### 4. (Optional) Open the SQL file directly
 Use any SQLite client (DB Browser for SQLite, DBeaver, VSCode SQLite extension) to open `covid_project.db` and run `covid_exploration.sql` interactively.
 
+> **Note:** The `PRAGMA table_info(...)` statements in Section 1 are SQLite-specific and will not run in non-SQLite clients such as PostgreSQL or DBeaver in non-SQLite mode.
+
 ---
 
 ## SQL Analysis Sections
 
 | # | Section | Description |
 |---|---------|-------------|
-| 1 | Basic Exploration | Preview raw rows, inspect column structure with `PRAGMA table_info` |
-| 2 | Death Percentage | `total_deaths / total_cases * 100` — likelihood of dying if infected, per country and date |
+| 1 | Basic Exploration | Preview raw rows, inspect column structure with `PRAGMA table_info` *(SQLite-specific — not portable to PostgreSQL etc.)* |
+| 2 | Death Percentage | `total_deaths / total_cases * 100` — top 10 country/date combinations by death percentage, globally ordered |
 | 3 | Infection Rate | `total_cases / population * 100` — what % of each country's population has been infected |
 | 4 | Highest Infection Rate | Countries ranked by peak infection rate relative to population |
-| 5 | Highest Death Count | Top countries and continents by total COVID deaths |
+| 5 | Highest Death Count | Top countries by death count; continents use dedicated continent-level rows in the data (where `continent` is null) rather than aggregating country rows — giving true continent totals |
 | 6 | Global Numbers | Worldwide daily and all-time totals: cases, deaths, death percentage |
 | 7 | Vaccination Progress | JOIN deaths + vaccinations tables; rolling cumulative vaccinations using `SUM() OVER (PARTITION BY location ORDER BY date)` |
 | 8 | CTE | Common Table Expression wrapping the vaccination join; outer query adds `% population vaccinated` |
