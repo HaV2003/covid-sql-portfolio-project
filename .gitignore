@@ -1,8 +1,0 @@
-# Generated data files — created by setup.py at runtime
-data/
-covid_project.db
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
