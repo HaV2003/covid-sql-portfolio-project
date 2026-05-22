@@ -1,0 +1,9 @@
+# Generated data files — run setup.py to recreate
+data/
+covid_project.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
