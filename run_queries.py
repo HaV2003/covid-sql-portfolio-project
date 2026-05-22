@@ -65,7 +65,7 @@ def main():
     # ----------------------------------------------------------
     # Section 2: Death Percentage
     # ----------------------------------------------------------
-    run_query(conn, "SECTION 2 — Death Percentage (United States sample)", """
+    run_query(conn, "SECTION 2 — Death Percentage (Top 10 by death %)", """
         SELECT location, date, total_cases, total_deaths,
                ROUND(
                    CAST(NULLIF(total_deaths,'') AS REAL)
@@ -127,11 +127,12 @@ def main():
     """)
 
     run_query(conn, "SECTION 5b — Highest Death Count by Continent", """
-        SELECT continent,
+        SELECT location AS continent,
                MAX(CAST(NULLIF(total_deaths,'') AS INTEGER)) AS TotalDeathCount
         FROM CovidDeaths
-        WHERE continent IS NOT NULL AND continent != ''
-        GROUP BY continent
+        WHERE (continent IS NULL OR continent = '')
+          AND location NOT IN ('World', 'International', 'High income', 'Upper middle income', 'Lower middle income', 'Low income')
+        GROUP BY location
         ORDER BY TotalDeathCount DESC
     """)
 

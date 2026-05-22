@@ -21,6 +21,8 @@ FROM CovidVaccinations
 LIMIT 10;
 
 -- Column names and types for CovidDeaths
+-- Note: PRAGMA is SQLite-specific and will not work in non-SQLite clients
+-- (e.g. PostgreSQL, or DBeaver connected to a non-SQLite data source).
 PRAGMA table_info(CovidDeaths);
 
 -- Column names and types for CovidVaccinations
@@ -112,14 +114,15 @@ WHERE continent IS NOT NULL
 GROUP BY location
 ORDER BY TotalDeathCount DESC;
 
--- By continent (aggregate death totals)
+-- By continent (reads continent-level rows directly from the data,
+-- where continent IS NULL/empty and location holds the continent name)
 SELECT
-    continent,
+    location AS continent,
     MAX(CAST(NULLIF(total_deaths, '') AS INTEGER)) AS TotalDeathCount
 FROM CovidDeaths
-WHERE continent IS NOT NULL
-  AND continent != ''
-GROUP BY continent
+WHERE (continent IS NULL OR continent = '')
+  AND location NOT IN ('World', 'International', 'High income', 'Upper middle income', 'Lower middle income', 'Low income')
+GROUP BY location
 ORDER BY TotalDeathCount DESC;
 
 

@@ -62,6 +62,8 @@ def main():
         load_to_sqlite(conn, name, df)
         print()
 
+    # Keep this view definition in sync with the CREATE VIEW statement
+    # in Section 10 of covid_exploration.sql.
     print("Creating view PercentPopulationVaccinated ...")
     conn.execute("DROP VIEW IF EXISTS PercentPopulationVaccinated")
     conn.execute("""
